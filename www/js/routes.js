@@ -65,6 +65,16 @@ angular.module('app.routes', [])
       }
     }
   })
+  
+  .state('menu.logout', {
+    url: '/logout',
+    views: {
+      'side-menu21': {
+        templateUrl: 'templates/logout.html',
+        controller: 'logoutCtrl'
+      }
+    }
+  })
 
 $urlRouterProvider.otherwise('//home')
 
