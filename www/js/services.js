@@ -4,7 +4,7 @@ angular.module('app.services', [])
 
 }])
 
-.service('BlankService', ['$http', '$location', 'ngToast', '$q', function($http,  $location, ngToast, $q){
+.service('BlankService', ['$http', '$location', '$q', function($http,  $location, $q){
 	var domain = 'http://design2code.in.md-in-25.webhostbox.net/comcom.com/services/';
 	return{
 		isloggedIn : isloggedIn,
@@ -12,9 +12,10 @@ angular.module('app.services', [])
     	clearCookies : clearCookies,
     	getUser : getUser,
 		login: doLogin,
-		register: doRegister
+		register: doRegister,
+		words: getWords
 	}
-	
+
 	function isloggedIn() {
     	if (window.localStorage.getItem('loggedin') == 'true') {
     		return true;
@@ -22,11 +23,11 @@ angular.module('app.services', [])
     		return false;
     	}
     }
-    
+
     function getUser(){
     	return window.localStorage.getItem('user');
     }
-    
+
 
     function welcomeText(){
     	if(window.localStorage.getItem('loggedin') == 'true'){
@@ -35,16 +36,16 @@ angular.module('app.services', [])
     		return "Hello";
     	}
     }
-    
+
     function getUser(){
     	return window.localStorage.getItem('user').first_name;
     }
-    
+
     function clearCookies(){
     	window.localStorage.removeItem("loggedin");
     	window.localStorage.removeItem("user");
     }
-	
+
 	function doLogin(user){
 		var deferred = $q.defer();
 		$http.post(domain+"login", user).
@@ -56,7 +57,7 @@ angular.module('app.services', [])
 		  });
 		return deferred.promise;
 	}
-	
+
 	function doRegister(registerUser){
 		var deferred = $q.defer();
 		$http.post(domain+"register", registerUser).
@@ -68,5 +69,16 @@ angular.module('app.services', [])
 		  });
 		return deferred.promise;
 	}
-}]);
 
+	function getWords(){
+		var deferred = $q.defer();
+		$http.get(domain+"words").
+		  success(function(data, status, headers, config) {
+			  deferred.resolve(data);
+		  }).
+		  error(function(data, status, headers, config) {
+			  deferred.resolve({});
+		  });
+		return deferred.promise;
+	}
+}]);

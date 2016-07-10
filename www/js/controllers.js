@@ -1,16 +1,16 @@
 angular.module('app.controllers', [])
-  
+
 .controller('homeCtrl', function($scope) {
 
 })
-   
-.controller('loginCtrl', function($scope, BlankService, $state) {
+
+.controller('loginCtrl', function($scope, BlankService, $state, $ionicPopup) {
 	$scope.isLoggedIn = BlankService.isloggedIn();
 	$scope.user = {username:null,password:null};
     $scope.submit = function() {
     	BlankService.login($scope.user).then(function(data){
     		if(data.first_name == undefined){
-				  ngToast.warning({content: 'Invalid credentials! Please try again!'});
+				  $ionicPopup.alert({title: 'Error',template:'Invalid credentials! Please try again!'});
 			  }else{
 				  window.localStorage.setItem('loggedin', 'true');
 				  window.localStorage.setItem('user', data);
@@ -19,38 +19,88 @@ angular.module('app.controllers', [])
     	});
 	};
 })
-   
-.controller('signupCtrl', function($scope, BlankService,$state) {
+
+.controller('signupCtrl', function($scope, BlankService,$state, $ionicPopup) {
 	$scope.isLoggedIn = BlankService.isloggedIn();
 	$scope.user = {first_name:null,last_name:null,address:null,phone:null,city:null,state:null,email:null,reemail:null,username:null,password:null};
     $scope.submit = function() {
-    	BlankService.register($scope.user).then(function(data){
-    		if(data.first_name == undefined){
-    			  ngToast.warning({content: 'Failed to register User! Please try again!'});
-    		  }else{
-    			  window.localStorage.setItem('loggedin', 'true');
-    			  window.localStorage.setItem('user', data);
-    			  $state.go('menu.face');
-    		  }
-    	});
+      if($scope.user.email == $scope.user.reemail && $scope.user.username != null && $scope.user.password != null){
+        	BlankService.register($scope.user).then(function(data){
+        		if(data.first_name == undefined){
+        			  $ionicPopup.alert({title: 'Error',template:'Failed to register User! Please try again!'});
+        		  }else{
+        			  window.localStorage.setItem('loggedin', 'true');
+        			  window.localStorage.setItem('user', data);
+        			  $state.go('menu.face');
+        		  }
+        	});
+      }else{
+        $ionicPopup.alert({title: 'Error',template:'Please fill all details.'});
+      }
 	};
 })
-      
-.controller('faceCtrl', function($scope, BlankService,$state) {
+
+.controller('faceCtrl', function($scope, BlankService, $state, $rootScope, $cordovaCamera, $ionicPopup) {
 	$scope.isLoggedIn = BlankService.isloggedIn();
 	if(!$scope.isLoggedIn){
 		$state.go('menu.login');
 	}
-})
-   
-.controller('speechCtrl', function($scope,BlankService,$state) {
-	$scope.isLoggedIn = BlankService.isloggedIn();
-	if(!$scope.isLoggedIn){
-		$state.go('menu.login');
-	}
+
+  //function to take photo
+  $scope.takePhoto = function(){
+    var options = {
+      quality: 75,
+      destinationType: Camera.DestinationType.DATA_URL,
+      sourceType: Camera.PictureSourceType.CAMERA,
+      allowEdit: true,
+      encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 300,
+      targetHeight: 300,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: true
+    };
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+         $scope.$apply(function () {
+             $rootScope.imgURI = "data:image/jpeg;base64," + imageData;
+         });
+     }, function(err) {
+         $ionicPopup.alert({title: 'Error',template:'Error while taking photo -' + err});
+     });
+}
+
 })
 
-.controller('logoutCtrl', function($scope,BlankService) {
-	BlankService.clearCookies();
+.controller('speechCtrl', function($scope, BlankService, $state, $ionicPopup) {
+	$scope.isLoggedIn = BlankService.isloggedIn();
+	if(!$scope.isLoggedIn){
+		$state.go('menu.login');
+	}
+
+  $scope.textToSpeak = undefined;
+  $scope.selectedTextToSpeak = undefined;
+  $scope.words = [];
+  BlankService.words().then(function(data){
+    $scope.words = data;
+  })
+
+  //function to speak the text
+  $scope.speak = function(){
+		document.addEventListener('deviceready', function () {
+    		TTS.speak({
+		           text: $scope.textToSpeak || $scope.selectedTextToSpeak,
+		           locale: 'en-GB',
+		           rate: 1.5
+		       }, function () {
+		           // Do Something after success
+		       }, function (reason) {
+		            $ionicPopup.alert({title: 'Error',template:'Error while speaking text -' + reason});
+		       });
+		})
+  }
 })
- 
+
+.controller('logoutCtrl', function($scope,BlankService, $state) {
+	BlankService.clearCookies();
+  $state.go('menu.logout');
+})

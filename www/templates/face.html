@@ -5,10 +5,11 @@
                 <i class="icon ion-android-camera"></i>
             </ion-item>
             <div style="margin: 0px; line-height: 250px; text-align: center; background-color: rgb(232, 235, 239);">
-                <i class="icon ion-image" style="font-size: 64px; color: rgb(136, 136, 136); vertical-align: middle;"></i>
+                <i ng-show="imgURI === undefined" class="icon ion-image" style="font-size: 64px; color: rgb(136, 136, 136); vertical-align: middle;"></i>
+                <img ng-show="imgURI !== undefined" ng-src="{{imgURI}}" style="text-align: center"/>
             </div>
             <ion-item id="face-list-item15" class="  ">Look In the Camera and say Cheese!</ion-item>
         </div>
-        <button id="face-button7" class=" button button-royal  button-block ">Click To Take Photo</button>
+        <button id="face-button7" class=" button button-royal  button-block " ng-click="takePhoto()">Click To Take Photo</button>
     </ion-content>
 </ion-view>

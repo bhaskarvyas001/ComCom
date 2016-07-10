@@ -1,24 +1,20 @@
 <ion-view title="speech" id="page5" style="background-color:#D1EBF1;" class=" ">
     <ion-content padding="true" class="has-header">
         <div style="margin: 0px; line-height: 250px; text-align: center; background-color: rgb(232, 235, 239);">
-            <i class="icon ion-image" style="font-size: 64px; color: rgb(136, 136, 136); vertical-align: middle;"></i>
+            <i ng-show="imgURI === undefined" class="icon ion-image" style="font-size: 64px; color: rgb(136, 136, 136); vertical-align: middle;"></i>
+            <img ng-show="imgURI !== undefined" ng-src="{{imgURI}}" style="text-align: center"/>
         </div>
         <form id="speech-form13" class="list ">
             <div class="spacer" style="width: 300px; height: 15px;"></div>
             <label class="item item-input " id="speech-input13">
-                <input type="text" placeholder="Type here and click to speak">
+                <input type="text" placeholder="Type here and click to speak" ng-model="textToSpeak">
             </label>
             <div class="spacer" style="width: 300px; height: 14px;"></div>
             <label class="item item-select " id="speech-select3">
                 <span class="input-label">Select</span>
-                <select>
-                    <option>Random</option>
-                    <option>Words</option>
-                    <option>To be</option>
-                    <option>Spoken</option>
-                </select>
+                <select ng-options="word as word.word for word in words" ng-model="selectedTextToSpeak"></select>
             </label>
         </form>
-        <button id="speech-button8" class=" button button-positive  button-block icon-right ion-android-microphone ">Speak</button>
+        <button id="speech-button8" class=" button button-positive  button-block icon-right ion-android-microphone " ng-click="speak()">Speak</button>
     </ion-content>
 </ion-view>
