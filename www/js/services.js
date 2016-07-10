@@ -8,9 +8,9 @@ angular.module('app.services', [])
 	var domain = 'http://design2code.in.md-in-25.webhostbox.net/comcom.com/services/';
 	return{
 		isloggedIn : isloggedIn,
-    	welcomeText : welcomeText,
-    	clearCookies : clearCookies,
-    	getUser : getUser,
+    welcomeText : welcomeText,
+    clearCookies : clearCookies,
+    getUser : getUser,
 		login: doLogin,
 		register: doRegister,
 		words: getWords
@@ -38,7 +38,7 @@ angular.module('app.services', [])
     }
 
     function getUser(){
-    	return window.localStorage.getItem('user').first_name;
+    	return window.localStorage.getItem('user');
     }
 
     function clearCookies(){

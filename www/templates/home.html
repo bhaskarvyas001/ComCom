@@ -5,7 +5,16 @@
             <img src="img/ltY7aeeaToS09Bfu3hFa_unnamed.png" width="60%" height="auto" style="display: block; margin-left: auto; margin-right: auto;">
         </div>
         <div class="spacer" style="width: 300px; height: 39px;"></div>
-        <a ui-sref="menu.login" id="home-button1" class=" button button-balanced  button-block icon-left ion-android-contact ">Log In</a>
-        <a ui-sref="menu.signup" id="home-button2" class=" button button-calm  button-block icon-left ion-android-add ">Sign Up</a>
+        <a ui-sref="menu.login" id="home-button1" class=" button button-balanced  button-block icon-left ion-android-contact " ng-show="!isLoggedIn">Log In</a>
+        <a ui-sref="menu.signup" id="home-button2" class=" button button-calm  button-block icon-left ion-android-add " ng-show="!isLoggedIn">Sign Up</a>
+        <div class="card" ng-show="isLoggedIn">
+          <div class="item item-text-wrap">
+            <p>Welcome back {{usersName}},</p>
+            <p>Please choose the operation to perform.</p>
+          </div>
+        </div>
+        <a ui-sref="menu.face" id="home-button3" class=" button button-balanced  button-block icon-left ion-android-camera " ng-show="isLoggedIn">Scan Face</a>
+        <a ui-sref="menu.speech" id="home-button4" class=" button button-calm  button-block icon-left ion-android-microphone " ng-show="isLoggedIn">Text to Speech</a>
+        <a ui-sref="menu.logout" id="home-button5" class=" button button-assertive  button-block icon-left ion-android-exit " ng-show="isLoggedIn">Logout</a>
     </ion-content>
 </ion-view>

@@ -1,11 +1,14 @@
 angular.module('app.controllers', [])
 
-.controller('homeCtrl', function($scope) {
-
+.controller('homeCtrl', function($scope, BlankService, $rootScope) {
+	$rootScope.$on('$stateChangeStart', function (event, toState, toStateParams, fromState, fromStateParams) {
+		$rootScope.isLoggedIn = BlankService.isloggedIn();
+		$rootScope.usersName = BlankService.getUser() == undefined ? "" : JSON.parse(BlankService.getUser()).first_name;
+	})
 })
 
-.controller('loginCtrl', function($scope, BlankService, $state, $ionicPopup) {
-	$scope.isLoggedIn = BlankService.isloggedIn();
+.controller('loginCtrl', function($scope, BlankService, $state, $rootScope, $ionicPopup) {
+	$rootScope.isLoggedIn = false;
 	$scope.user = {username:null,password:null};
     $scope.submit = function() {
     	BlankService.login($scope.user).then(function(data){
@@ -13,15 +16,15 @@ angular.module('app.controllers', [])
 				  $ionicPopup.alert({title: 'Error',template:'Invalid credentials! Please try again!'});
 			  }else{
 				  window.localStorage.setItem('loggedin', 'true');
-				  window.localStorage.setItem('user', data);
+				  window.localStorage.setItem('user', JSON.stringify(data));
 				  $state.go('menu.face');
 			  }
     	});
 	};
 })
 
-.controller('signupCtrl', function($scope, BlankService,$state, $ionicPopup) {
-	$scope.isLoggedIn = BlankService.isloggedIn();
+.controller('signupCtrl', function($scope, BlankService,$state, $rootScope, $ionicPopup) {
+	$rootScope.isLoggedIn = false;
 	$scope.user = {first_name:null,last_name:null,address:null,phone:null,city:null,state:null,email:null,reemail:null,username:null,password:null};
     $scope.submit = function() {
       if($scope.user.email == $scope.user.reemail && $scope.user.username != null && $scope.user.password != null){
@@ -30,7 +33,7 @@ angular.module('app.controllers', [])
         			  $ionicPopup.alert({title: 'Error',template:'Failed to register User! Please try again!'});
         		  }else{
         			  window.localStorage.setItem('loggedin', 'true');
-        			  window.localStorage.setItem('user', data);
+        			  window.localStorage.setItem('user', JSON.stringify(data));
         			  $state.go('menu.face');
         		  }
         	});
@@ -41,8 +44,8 @@ angular.module('app.controllers', [])
 })
 
 .controller('faceCtrl', function($scope, BlankService, $state, $rootScope, $cordovaCamera, $ionicPopup) {
-	$scope.isLoggedIn = BlankService.isloggedIn();
-	if(!$scope.isLoggedIn){
+	$rootScope.isLoggedIn = BlankService.isloggedIn();
+	if(!$rootScope.isLoggedIn){
 		$state.go('menu.login');
 	}
 
@@ -61,9 +64,7 @@ angular.module('app.controllers', [])
     };
 
     $cordovaCamera.getPicture(options).then(function(imageData) {
-         $scope.$apply(function () {
-             $rootScope.imgURI = "data:image/jpeg;base64," + imageData;
-         });
+        $rootScope.imgURI = "data:image/jpeg;base64," + imageData;
      }, function(err) {
          $ionicPopup.alert({title: 'Error',template:'Error while taking photo -' + err});
      });
@@ -71,9 +72,9 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('speechCtrl', function($scope, BlankService, $state, $ionicPopup) {
-	$scope.isLoggedIn = BlankService.isloggedIn();
-	if(!$scope.isLoggedIn){
+.controller('speechCtrl', function($scope, BlankService, $state, $rootScope, $ionicPopup) {
+	$rootScope.isLoggedIn = BlankService.isloggedIn();
+	if(!$rootScope.isLoggedIn){
 		$state.go('menu.login');
 	}
 
@@ -91,6 +92,7 @@ angular.module('app.controllers', [])
 		$scope.selectedTextToSpeak = $scope.selectedTextToSpeak.split(":")[1];
 		var speech = new SpeechSynthesisUtterance($scope.textToSpeak || $scope.selectedTextToSpeak);
 		speech.lang = 'en-US';
+		speech.rate = '.70';
 		speechSynthesis.speak(speech);
   }
 })

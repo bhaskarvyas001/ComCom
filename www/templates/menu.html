@@ -17,19 +17,19 @@
                 <ion-item class="item-icon-right  " id="menu-list-item1" ui-sref="menu.home" menu-close="">Home
                     <i class="icon ion-ios-flag"></i>
                 </ion-item>
-                <ion-item class="item-icon-right  " id="menu-list-item2" ui-sref="menu.login" menu-close="">Log In
+                <ion-item class="item-icon-right  " id="menu-list-item2" ui-sref="menu.login" menu-close="" ng-show="!isLoggedIn">Log In
                     <i class="icon ion-android-contact"></i>
                 </ion-item>
-                <ion-item class="item-icon-right  " id="menu-list-item3" ui-sref="menu.signup" menu-close="">Sign Up
+                <ion-item class="item-icon-right  " id="menu-list-item3" ui-sref="menu.signup" menu-close="" ng-show="!isLoggedIn">Sign Up
                     <i class="icon ion-android-add"></i>
                 </ion-item>
-                <ion-item class="item-icon-right  " id="menu-list-item8" ui-sref="menu.face" menu-close="">Scan Face
+                <ion-item class="item-icon-right  " id="menu-list-item8" ui-sref="menu.face" menu-close="" ng-show="isLoggedIn">Scan Face
                     <i class="icon ion-android-camera"></i>
                 </ion-item>
-                <ion-item class="item-icon-right  " id="menu-list-item16" ui-sref="menu.speech" menu-close="">Text To Speech
+                <ion-item class="item-icon-right  " id="menu-list-item16" ui-sref="menu.speech" menu-close="" ng-show="isLoggedIn">Text To Speech
                     <i class="icon ion-android-microphone"></i>
                 </ion-item>
-                <ion-item class="item-icon-right  " id="menu-list-item9" ui-sref="menu.logout" menu-close="">Logout
+                <ion-item class="item-icon-right  " id="menu-list-item9" ui-sref="menu.logout" menu-close="" ng-show="isLoggedIn">Logout
                     <i class="icon ion-android-exit"></i>
                 </ion-item>
             </ion-list>
