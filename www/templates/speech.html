@@ -7,12 +7,12 @@
         <form id="speech-form13" class="list ">
             <div class="spacer" style="width: 300px; height: 15px;"></div>
             <label class="item item-input " id="speech-input13">
-                <input type="text" placeholder="Type here and click to speak" ng-model="textToSpeak">
+                <input type="text" placeholder="Type here and click to speak" ng-model="textToSpeak" id="textToSpeak">
             </label>
             <div class="spacer" style="width: 300px; height: 14px;"></div>
             <label class="item item-select " id="speech-select3">
                 <span class="input-label">Select</span>
-                <select ng-options="word as word.word for word in words" ng-model="selectedTextToSpeak"></select>
+                <select ng-options="word.word as word.word for word in words" ng-model="selectedTextToSpeak" id="selectedTextToSpeak"></select>
             </label>
         </form>
         <button id="speech-button8" class=" button button-positive  button-block icon-right ion-android-microphone " ng-click="speak()">Speak</button>

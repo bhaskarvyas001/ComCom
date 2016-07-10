@@ -77,8 +77,8 @@ angular.module('app.controllers', [])
 		$state.go('menu.login');
 	}
 
-  $scope.textToSpeak = undefined;
-  $scope.selectedTextToSpeak = undefined;
+  $scope.textToSpeak = null;
+  $scope.selectedTextToSpeak = null;
   $scope.words = [];
   BlankService.words().then(function(data){
     $scope.words = data;
@@ -86,17 +86,12 @@ angular.module('app.controllers', [])
 
   //function to speak the text
   $scope.speak = function(){
-		document.addEventListener('deviceready', function () {
-    		TTS.speak({
-		           text: $scope.textToSpeak || $scope.selectedTextToSpeak,
-		           locale: 'en-GB',
-		           rate: 1.5
-		       }, function () {
-		           // Do Something after success
-		       }, function (reason) {
-		            $ionicPopup.alert({title: 'Error',template:'Error while speaking text -' + reason});
-		       });
-		})
+		$scope.textToSpeak =  angular.element( document.querySelector( '#textToSpeak' ) )[0].value;
+	  $scope.selectedTextToSpeak =  angular.element( document.querySelector( '#selectedTextToSpeak' ) )[0].value;
+		$scope.selectedTextToSpeak = $scope.selectedTextToSpeak.split(":")[1];
+		var speech = new SpeechSynthesisUtterance($scope.textToSpeak || $scope.selectedTextToSpeak);
+		speech.lang = 'en-US';
+		speechSynthesis.speak(speech);
   }
 })
 
