@@ -88,12 +88,25 @@ angular.module('app.controllers', [])
   //function to speak the text
   $scope.speak = function(){
 		$scope.textToSpeak =  angular.element( document.querySelector( '#textToSpeak' ) )[0].value;
-	  $scope.selectedTextToSpeak =  angular.element( document.querySelector( '#selectedTextToSpeak' ) )[0].value;
+		$scope.selectedTextToSpeak =  angular.element( document.querySelector( '#selectedTextToSpeak' ) )[0].value;
 		$scope.selectedTextToSpeak = $scope.selectedTextToSpeak.split(":")[1];
-		var speech = new SpeechSynthesisUtterance($scope.textToSpeak || $scope.selectedTextToSpeak);
-		speech.lang = 'en-US';
-		speech.rate = '.70';
-		speechSynthesis.speak(speech);
+		$scope.isAndroid = ionic.Platform.isAndroid();
+		if($scope.isAndroid){
+		    TTS.speak({
+            text: $scope.textToSpeak || $scope.selectedTextToSpeak,
+            locale: 'en-GB',
+            rate: 0.75
+        }, function () {
+            alert('success');
+        }, function (reason) {
+            alert(reason);
+        });
+		}else{
+			var speech = new SpeechSynthesisUtterance($scope.textToSpeak || $scope.selectedTextToSpeak);
+			speech.lang = 'en-US';
+			speech.rate = .0001;
+			speechSynthesis.speak(speech);
+		}
   }
 })
 
