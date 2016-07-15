@@ -25,6 +25,7 @@ angular.module('app.controllers', [])
 
 .controller('signupCtrl', function($scope, BlankService,$state, $rootScope, $ionicPopup) {
 	$rootScope.isLoggedIn = false;
+	$scope.states = states;	
 	$scope.user = {first_name:null,last_name:null,address:null,phone:null,city:null,state:null,email:null,reemail:null,username:null,password:null};
     $scope.submit = function() {
       if($scope.user.email == $scope.user.reemail && $scope.user.username != null && $scope.user.password != null){
@@ -66,13 +67,13 @@ angular.module('app.controllers', [])
     $cordovaCamera.getPicture(options).then(function(imageData) {
         $rootScope.imgURI = "data:image/jpeg;base64," + imageData;
      }, function(err) {
-         $ionicPopup.alert({title: 'Error',template:'Error while taking photo -' + err});
+         $ionicPopup.alert({title: 'Error',template:'Error while taking photo - ' + err});
      });
 }
 
 })
 
-.controller('speechCtrl', function($scope, BlankService, $state, $rootScope, $ionicPopup) {
+.controller('speechCtrl', function($scope, BlankService, $state, $rootScope, $ionicPopup, $cordovaTTS) {
 	$rootScope.isLoggedIn = BlankService.isloggedIn();
 	if(!$rootScope.isLoggedIn){
 		$state.go('menu.login');
@@ -92,15 +93,11 @@ angular.module('app.controllers', [])
 		$scope.selectedTextToSpeak = $scope.selectedTextToSpeak.split(":")[1];
 		$scope.isAndroid = ionic.Platform.isAndroid();
 		if($scope.isAndroid){
-		    TTS.speak({
-            text: $scope.textToSpeak || $scope.selectedTextToSpeak,
-            locale: 'en-GB',
-            rate: 0.75
-        }, function () {
-            alert('success');
-        }, function (reason) {
-            alert(reason);
-        });
+				var parameters = {
+					rate:1
+				}
+
+				responsiveVoice.speak($scope.textToSpeak || $scope.selectedTextToSpeak, "UK English Male", parameters);
 		}else{
 			var speech = new SpeechSynthesisUtterance($scope.textToSpeak || $scope.selectedTextToSpeak);
 			speech.lang = 'en-US';
